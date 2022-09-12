@@ -9,21 +9,20 @@
 #include <thread>
 #include <memory>
 #include <random>
+#include <chrono>
+
 
 #include "/home/ahmet/Workspaces/cpp_ws/Lidar_Simulation/include/Lidar_Utils/Lidar_Utils.hpp"
-
+#include "/home/ahmet/Workspaces/cpp_ws/Lidar_Simulation/include/Lidar_Tool_Option/Lidar_Tool_Option.hpp"
 
 #define __APP_NAME__ "Lidar_Activation"
-
-using u32 = uint_least32_t;
-using engine = std::mt19937;
 
 namespace Lidar_Simulation
 {
 
-    class Lidar_Activation : protected Lidar_Utils
+    class Lidar_Activation : protected Lidar_Utils, protected Lidar_Tool_Option
     {
-        friend std::ostream &operator<<(std::ostream &os, const Lidar_Activation &account);
+        friend std::ostream &operator<<(std::ostream &os, const Lidar_Activation &lidar_activation);
 
     public:
         Lidar_Activation(const size_t &t_size);
@@ -33,6 +32,8 @@ namespace Lidar_Simulation
     private:
         size_t m_size;
 
+        int m_options;
+
         //! Get the number of objects.
         static size_t m_number_objects;
 
@@ -40,6 +41,9 @@ namespace Lidar_Simulation
 
         Lidar_Utils m_lidar_utils;
 
+        Lidar_Tool_Option m_lidar_tool_option;
+
+        bool m_flag{};
         /*!
          * CounterObjects.
          * @return size of how many object is created  if successful.
@@ -52,11 +56,7 @@ namespace Lidar_Simulation
          */
         inline void displayActiveObjects() const;
 
-        /*!
-         * PointCloud Creater.
-         * @return  if successful.
-         */
-        inline std::shared_ptr<std::vector<std::array<double, 3>>> lidarPointsCreater(std::shared_ptr<std::vector<std::array<double, 3>>> &t_lidar_points);
+         void threadLidar();
     };
 } // Namespace  Lidar_Simulation
 

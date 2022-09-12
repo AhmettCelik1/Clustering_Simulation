@@ -3,7 +3,7 @@
 
 int main()
 {
-    size_t size{1000};
+    size_t size{};
 
     Lidar_Simulation::Lidar_Activation lidar_activation(size);
 

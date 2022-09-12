@@ -7,22 +7,61 @@ namespace Lidar_Simulation
     size_t Lidar_Activation::m_number_objects{0};
 
     Lidar_Activation::Lidar_Activation(const size_t &t_size)
-        : m_size{t_size}, Lidar_Utils()
+        : m_size{t_size},
+          Lidar_Utils(),
+          Lidar_Tool_Option(),
+          m_flag{false}
+
     {
+        std::cout << "Enter the size of the lidar points: ";
+        std::cin >> m_size;
+
         std::cout << "[" << __APP_NAME__ << "] Constructor is called." << std::endl;
 
         m_lidar_points = std::make_shared<std::vector<std::array<double, 3>>>();
 
-        m_lidar_points = lidarPointsCreater(m_lidar_points);
+        m_lidar_tool_option.generatorLidarPoints(m_lidar_points, m_size);
 
         m_lidar_utils.lidarPointsPrinter(m_lidar_points, m_size);
 
+        // new std::thread(&Lidar_Activation::threadLidar, this);
+
+        do
+        {
+
+            std::cout << "[" << __APP_NAME__ << "] Please select an option from the menu below:" << std::endl;
+
+            std::cout << "[" << __APP_NAME__ << "] 1. Change size of the lidar" << std::endl;
+
+            std::cout << "[ " << __APP_NAME__ << "] 2. Exit " << std::endl;
+
+            std::cout << "-----------Option----------->";
+
+            std::cin >> m_options;
+            system("cls");
+            system("clear");
+
+            if (m_options == 1)
+            {
+                m_lidar_points == m_lidar_tool_option.switcherLidarSize(m_lidar_points);
+                m_lidar_utils.lidarPointsPrinter(m_lidar_points, m_lidar_tool_option.m_size_switcher);
+                std::cout << std::endl;
+            }
+            else if (m_options == 2)
+            {
+                std::cout << "-----------------Exited------------" << std::endl;
+                std::cout << std::endl;
+            }
+        } while (m_options != 2);
+
         ++m_number_objects;
+
         displayActiveObjects();
     }
 
     Lidar_Activation::~Lidar_Activation()
     {
+
         --m_number_objects;
 
         std::cout << "[" << __APP_NAME__ << "] Destructor is called." << std::endl;
@@ -36,34 +75,6 @@ namespace Lidar_Simulation
     {
 
         printf("[%s] There are %zu active objects.\n", __APP_NAME__, m_number_objects);
-    }
-
-    inline std::shared_ptr<std::vector<std::array<double, 3>>> Lidar_Activation::lidarPointsCreater(std::shared_ptr<std::vector<std::array<double, 3>>> &t_lidar_points)
-    {
-
-        std::random_device rd_x;
-        std::default_random_engine eng_x(rd_x());
-        std::uniform_real_distribution<float> distr_x(0, 10);
-
-        std::random_device rd_y;
-        std::default_random_engine eng_y(rd_y());
-        std::uniform_real_distribution<float> distr_y(-5, 5);
-
-        std::random_device rd_z;
-        std::default_random_engine eng_z(rd_z());
-        std::uniform_real_distribution<float> distr_z(-5, 5);
-
-        for (size_t i{0}; i < m_size; ++i)
-        {
-            std::array<double, 3> point;
-
-            point[0] = distr_x(eng_x);
-            point[1] = distr_y(eng_y);
-            point[2] = distr_z(eng_z);
-
-            t_lidar_points->push_back(point);
-        }
-        return t_lidar_points;
     }
 
 }

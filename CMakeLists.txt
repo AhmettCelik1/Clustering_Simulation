@@ -11,14 +11,22 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
 set(OpenCV_DIR /usr/lib/x86_64-linux-gnu/cmake/opencv4)
+set(Boost_USE_STATIC_LIBS ON)
 
 find_package(OpenCV REQUIRED)
+find_package(Threads REQUIRED)
 
 ## Declare a cpp library
 add_library(utils_core
         src/Lidar_Utils/Lidar_Utils.cpp
         )
 target_compile_features(utils_core INTERFACE cxx_std_11)
+
+## Declare a cpp library
+add_library(lidar_tool_option_core
+        src/Lidar_Tool_Option/Lidar_Tool_Option.cpp
+        )
+target_compile_features(lidar_tool_option_core INTERFACE cxx_std_11)
 
 
 ## Declare a cpp library
@@ -38,5 +46,7 @@ target_compile_features(main INTERFACE cxx_std_11)
 target_link_libraries(main
         lidar_activation_core
         utils_core  
+        lidar_tool_option_core
         ${OpenCV_LIBS}
+        ${CMAKE_THREAD_LIBS_INIT}
         )
