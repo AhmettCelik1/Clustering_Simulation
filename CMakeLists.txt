@@ -39,6 +39,8 @@ target_compile_features(lidar_activation_core INTERFACE cxx_std_11)
 ## Declare cpp executables
 add_executable(main
         src/main.cpp
+        src/Lidar_Utils/Lidar_Utils.cpp
+        src/Lidar_Tool_Option/Lidar_Tool_Option.cpp
         )
 
 target_compile_features(main INTERFACE cxx_std_11)

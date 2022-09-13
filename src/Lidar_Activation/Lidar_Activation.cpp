@@ -8,7 +8,6 @@ namespace Lidar_Simulation
 
     Lidar_Activation::Lidar_Activation(const size_t &t_size)
         : m_size{t_size},
-          Lidar_Utils(),
           Lidar_Tool_Option(),
           m_flag{false}
 
@@ -44,7 +43,7 @@ namespace Lidar_Simulation
             if (m_options == 1)
             {
                 m_lidar_points == m_lidar_tool_option.switcherLidarSize(m_lidar_points);
-                m_lidar_utils.lidarPointsPrinter(m_lidar_points, m_lidar_tool_option.m_size_switcher);
+                m_lidar_utils.lidarPointsPrinter(m_lidar_points, m_lidar_tool_option.m_size);
                 std::cout << std::endl;
             }
             else if (m_options == 2)
