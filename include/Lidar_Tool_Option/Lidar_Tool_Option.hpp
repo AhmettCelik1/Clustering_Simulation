@@ -10,10 +10,11 @@
 #include <memory>
 #include <random>
 
+#include "/home/ahmet/Workspaces/cpp_ws/Lidar_Simulation/include/Lidar_Utils/Lidar_Utils.hpp"
 
 namespace Lidar_Simulation
 {
-    class Lidar_Tool_Option
+    class Lidar_Tool_Option : public Lidar_Utils
 
     {
     public:
@@ -29,7 +30,7 @@ namespace Lidar_Simulation
 
         std::array<double, 1> *m_points_z;
 
-        size_t m_size_switcher;
+        size_t m_size;
 
         std::unordered_map<std::string, int> m_x_points_range;
 
@@ -42,6 +43,8 @@ namespace Lidar_Simulation
         std::shared_ptr<std::vector<std::array<double, 3>>> generatorLidarPoints(const std::shared_ptr<std::vector<std::array<double, 3>>> &t_lidar_points, const size_t &t_size);
 
         std::shared_ptr<std::vector<std::array<double, 3>>> switcherLidarSize(const std::shared_ptr<std::vector<std::array<double, 3>>> &t_lidar_points);
+
+        virtual void lidarPointsPrinter(const std::shared_ptr<std::vector<std::array<double, 3>>> &t_lidar_points, const size_t &t_size) override;
     };
 
 }

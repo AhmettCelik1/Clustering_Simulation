@@ -5,7 +5,8 @@ namespace Lidar_Simulation
     Lidar_Tool_Option::Lidar_Tool_Option()
         : m_lidar_points{nullptr}, m_points_x{nullptr}, m_points_y{nullptr}, m_points_z{nullptr},
           m_x_points_range{{"x_min", 0}, {"x_max", 10}}, m_y_points_range{{"y_min", -5}, {"y_max", 5}}, m_z_points_range{{"z_min", -5}, {"z_max", 5}},
-          frame_id{"velodyne"}
+          frame_id{"velodyne"},
+          Lidar_Utils()
     {
 
         m_lidar_points = std::make_shared<std::vector<std::array<double, 3>>>();
@@ -59,9 +60,9 @@ namespace Lidar_Simulation
     std::shared_ptr<std::vector<std::array<double, 3>>> Lidar_Tool_Option::switcherLidarSize(const std::shared_ptr<std::vector<std::array<double, 3>>> &t_lidar_points)
     {
         std::cout << "Please Enter the Lidar Size: ";
-        std::cin >> m_size_switcher;
+        std::cin >> m_size;
 
-        for (size_t i{0}; i < m_size_switcher; ++i)
+        for (size_t i{0}; i < m_size; ++i)
         {
 
             std::random_device rd_x;
@@ -87,6 +88,14 @@ namespace Lidar_Simulation
         }
 
         return t_lidar_points;
+    }
+    void Lidar_Tool_Option::lidarPointsPrinter(const std::shared_ptr<std::vector<std::array<double, 3>>> &t_lidar_points, const size_t &t_size)
+    {
+        for (size_t i{0}; i < t_size; ++i)
+        {
+            std::cout << "Point: " << i + 1 << " x: " << t_lidar_points->at(i)[0] << " y: " << t_lidar_points->at(i)[1] << " z: " << t_lidar_points->at(i)[2] << std::endl;
+        }
+        std::cout << "IN Lidar_Tool_Option" << std::endl;
     }
 
 }

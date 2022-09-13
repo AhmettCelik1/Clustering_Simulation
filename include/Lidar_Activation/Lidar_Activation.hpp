@@ -20,7 +20,7 @@
 namespace Lidar_Simulation
 {
 
-    class Lidar_Activation : protected Lidar_Utils, protected Lidar_Tool_Option
+    class Lidar_Activation : protected Lidar_Tool_Option
     {
         friend std::ostream &operator<<(std::ostream &os, const Lidar_Activation &lidar_activation);
 
