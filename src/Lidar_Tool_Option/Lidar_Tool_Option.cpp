@@ -8,6 +8,7 @@ namespace Lidar_Simulation
           frame_id{"velodyne"},
           Lidar_Utils()
     {
+        std::cout << "Lidar_Tool_Option constructor is called" << std::endl;
 
         m_lidar_points = std::make_shared<std::vector<std::array<double, 3>>>();
 
@@ -19,6 +20,7 @@ namespace Lidar_Simulation
     }
     Lidar_Tool_Option::~Lidar_Tool_Option()
     {
+        std::cout << "Lidar_Tool_Option destructor is called" << std::endl;
 
         delete[] m_points_x;
 

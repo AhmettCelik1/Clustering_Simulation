@@ -12,10 +12,11 @@ namespace Lidar_Simulation
           m_flag{false}
 
     {
-        std::cout << "Enter the size of the lidar points: ";
-        std::cin >> m_size;
 
         std::cout << "[" << __APP_NAME__ << "] Constructor is called." << std::endl;
+
+        std::cout << "Enter the size of the lidar points: ";
+        std::cin >> m_size;
 
         m_lidar_points = std::make_shared<std::vector<std::array<double, 3>>>();
 

@@ -4,10 +4,12 @@ namespace Lidar_Simulation
 {
     Lidar_Utils::Lidar_Utils()
     {
+        std::cout << "Lidar_Utils constructor is called" << std::endl;   
     }
 
     Lidar_Utils::~Lidar_Utils()
     {
+        std::cout << "Lidar_Utils destructor is called" << std::endl;
     }
 
     void Lidar_Utils::lidarPointsPrinter(const std::shared_ptr<std::vector<std::array<double, 3>>> &t_lidar_points, const size_t &t_size)

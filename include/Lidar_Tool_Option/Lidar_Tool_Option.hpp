@@ -14,38 +14,38 @@
 
 namespace Lidar_Simulation
 {
-    class Lidar_Tool_Option : public Lidar_Utils
+  class Lidar_Tool_Option : public Lidar_Utils
 
-    {
-    public:
-        Lidar_Tool_Option();
+  {
+  public:
+    Lidar_Tool_Option();
 
-        ~Lidar_Tool_Option();
+    virtual ~Lidar_Tool_Option();
 
-        std::shared_ptr<std::vector<std::array<double, 3>>> m_lidar_points;
+    std::shared_ptr<std::vector<std::array<double, 3>>> m_lidar_points;
 
-        std::array<double, 1> *m_points_x;
+    std::array<double, 1> *m_points_x;
 
-        std::array<double, 1> *m_points_y;
+    std::array<double, 1> *m_points_y;
 
-        std::array<double, 1> *m_points_z;
+    std::array<double, 1> *m_points_z;
 
-        size_t m_size;
+    size_t m_size;
 
-        std::unordered_map<std::string, int> m_x_points_range;
+    std::unordered_map<std::string, int> m_x_points_range;
 
-        std::unordered_map<std::string, int> m_y_points_range;
+    std::unordered_map<std::string, int> m_y_points_range;
 
-        std::unordered_map<std::string, int> m_z_points_range;
+    std::unordered_map<std::string, int> m_z_points_range;
 
-        const std::string frame_id;
+    const std::string frame_id;
 
-        std::shared_ptr<std::vector<std::array<double, 3>>> generatorLidarPoints(const std::shared_ptr<std::vector<std::array<double, 3>>> &t_lidar_points, const size_t &t_size);
+    std::shared_ptr<std::vector<std::array<double, 3>>> generatorLidarPoints(const std::shared_ptr<std::vector<std::array<double, 3>>> &t_lidar_points, const size_t &t_size);
 
-        std::shared_ptr<std::vector<std::array<double, 3>>> switcherLidarSize(const std::shared_ptr<std::vector<std::array<double, 3>>> &t_lidar_points);
+    virtual std::shared_ptr<std::vector<std::array<double, 3>>> switcherLidarSize(const std::shared_ptr<std::vector<std::array<double, 3>>> &t_lidar_points) final; // prevent a method to be overriden
 
-        virtual void lidarPointsPrinter(const std::shared_ptr<std::vector<std::array<double, 3>>> &t_lidar_points, const size_t &t_size) override;
-    };
+    virtual void lidarPointsPrinter(const std::shared_ptr<std::vector<std::array<double, 3>>> &t_lidar_points, const size_t &t_size) override;
+  };
 
 }
 

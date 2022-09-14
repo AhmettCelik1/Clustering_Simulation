@@ -18,9 +18,10 @@ namespace Lidar_Simulation
     public:
         Lidar_Utils();
 
-        ~Lidar_Utils();
+        virtual ~Lidar_Utils();
 
         virtual void lidarPointsPrinter(const std::shared_ptr<std::vector<std::array<double, 3>>> &t_lidar_points, const size_t &t_size);
+
     };
 
 }

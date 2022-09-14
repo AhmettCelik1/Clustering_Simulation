@@ -11,7 +11,6 @@
 #include <random>
 #include <chrono>
 
-
 #include "/home/ahmet/Workspaces/cpp_ws/Lidar_Simulation/include/Lidar_Utils/Lidar_Utils.hpp"
 #include "/home/ahmet/Workspaces/cpp_ws/Lidar_Simulation/include/Lidar_Tool_Option/Lidar_Tool_Option.hpp"
 
@@ -20,14 +19,14 @@
 namespace Lidar_Simulation
 {
 
-    class Lidar_Activation : protected Lidar_Tool_Option
+    class Lidar_Activation final : protected Lidar_Tool_Option // prevent Lidar_Activation class be derived from
     {
         friend std::ostream &operator<<(std::ostream &os, const Lidar_Activation &lidar_activation);
 
     public:
         Lidar_Activation(const size_t &t_size);
 
-        ~Lidar_Activation();
+        virtual ~Lidar_Activation();
 
     private:
         size_t m_size;
@@ -56,7 +55,7 @@ namespace Lidar_Simulation
          */
         inline void displayActiveObjects() const;
 
-         void threadLidar();
+        void threadLidar();
     };
 } // Namespace  Lidar_Simulation
 
