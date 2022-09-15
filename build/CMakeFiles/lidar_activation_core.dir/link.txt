@@ -1,0 +1,2 @@
+/usr/bin/ar qc liblidar_activation_core.a  CMakeFiles/lidar_activation_core.dir/src/Lidar_Activation/Lidar_Activation.cpp.o
+/usr/bin/ranlib liblidar_activation_core.a

@@ -14,7 +14,7 @@
 
 namespace Lidar_Simulation
 {
-  class Lidar_Tool_Option : public Lidar_Utils
+  class Lidar_Tool_Option : protected Lidar_Utils
 
   {
   public:
@@ -32,15 +32,29 @@ namespace Lidar_Simulation
 
     size_t m_size;
 
-    std::unordered_map<std::string, int> m_x_points_range;
-
-    std::unordered_map<std::string, int> m_y_points_range;
-
-    std::unordered_map<std::string, int> m_z_points_range;
+    std::unordered_map<std::string, double> m_points_range;
 
     const std::string frame_id;
 
-    std::shared_ptr<std::vector<std::array<double, 3>>> generatorLidarPoints(const std::shared_ptr<std::vector<std::array<double, 3>>> &t_lidar_points, const size_t &t_size);
+    std::uniform_real_distribution<double> distr_x{};
+
+    std::uniform_real_distribution<double> distr_y{};
+
+    std::uniform_real_distribution<double> distr_z{};
+
+    std::random_device rd_x{};
+
+    std::random_device rd_y{};
+
+    std::random_device rd_z{};
+
+    std::default_random_engine eng_x{};
+
+    std::default_random_engine eng_y{};
+
+    std::default_random_engine eng_z{};
+
+    virtual std::shared_ptr<std::vector<std::array<double, 3>>> generatorLidarPoints(const std::shared_ptr<std::vector<std::array<double, 3>>> &t_lidar_points, const size_t &t_size) final;
 
     virtual std::shared_ptr<std::vector<std::array<double, 3>>> switcherLidarSize(const std::shared_ptr<std::vector<std::array<double, 3>>> &t_lidar_points) final; // prevent a method to be overriden
 

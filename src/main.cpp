@@ -6,11 +6,9 @@ int main()
 
     size_t t_size{};
 
-    Lidar_Simulation::Lidar_Activation *lidar_activation_ptr{nullptr};
+    std::shared_ptr<Lidar_Simulation::Lidar_Activation> lidar_activation{nullptr};
 
-    lidar_activation_ptr = new Lidar_Simulation::Lidar_Activation(t_size);
-
-    delete lidar_activation_ptr;
+    lidar_activation = std::make_shared<Lidar_Simulation::Lidar_Activation>(t_size);
 
     // size_t size{5};
 
