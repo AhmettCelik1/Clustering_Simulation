@@ -19,7 +19,7 @@
 namespace Lidar_Simulation
 {
 
-    class Lidar_Activation final : protected Lidar_Tool_Option // prevent Lidar_Activation class be derived from
+    class Lidar_Activation final : protected Lidar_Utils // prevent Lidar_Activation class be derived from
     {
         friend std::ostream &operator<<(std::ostream &os, const Lidar_Activation &lidar_activation);
 
@@ -37,6 +37,8 @@ namespace Lidar_Simulation
         static size_t m_number_objects;
 
         std::shared_ptr<std::vector<std::array<double, 3>>> m_lidar_points;
+
+        std::shared_ptr<std::vector<std::vector<std::vector<double>>>> m_lidar_points_3d;
 
         Lidar_Utils m_lidar_utils;
 

@@ -10,9 +10,11 @@
 #include <memory>
 #include <random>
 
+#include "/home/ahmet/Workspaces/cpp_ws/Lidar_Simulation/include/Lidar_Tool_Option/Lidar_Tool_Option.hpp"
+
 namespace Lidar_Simulation
 {
-    class Lidar_Utils
+    class Lidar_Utils : protected Lidar_Tool_Option
 
     {
     public:
@@ -20,8 +22,37 @@ namespace Lidar_Simulation
 
         virtual ~Lidar_Utils();
 
-        virtual void lidarPointsPrinter(const std::shared_ptr<std::vector<std::array<double, 3>>> &t_lidar_points, const size_t &t_size);
+        std::unordered_map<std::string, double> m_points_range;
 
+        std::uniform_real_distribution<double> distr_x{};
+
+        std::uniform_real_distribution<double> distr_y{};
+
+        std::uniform_real_distribution<double> distr_z{};
+
+        std::random_device rd_x{};
+
+        std::random_device rd_y{};
+
+        std::random_device rd_z{};
+
+        std::default_random_engine eng_x{};
+
+        std::default_random_engine eng_y{};
+
+        std::default_random_engine eng_z{};
+
+        Lidar_Tool_Option m_lidar_tool_option;
+
+        size_t m_size;
+
+        double m_percantage;
+
+        virtual void lidarPointsPrinter(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points) override;
+
+        virtual std::shared_ptr<std::vector<std::vector<std::vector<double>>>> sizeIncreaser(std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points) final;
+
+        virtual std::shared_ptr<std::vector<std::vector<std::vector<double>>>> sizeDecreaser(std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points) final;
     };
 
 }
