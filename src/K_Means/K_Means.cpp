@@ -2,7 +2,13 @@
 
 namespace Lidar_Simulation
 {
-    K_Means::K_Means() : m_inertia(0.0), m_points_color_range{{"r_min", 0}, {"r_max", 100}, {"g_min", 0}, {"g_max", 100}, {"b_min", 0}, {"b_max", 100}}
+    K_Means::K_Means() : m_inertia(0.0), m_points_color_range{{"r_min", 0},
+                                                              {"r_max", 255},
+                                                              {"g_min", 0},
+                                                              {"g_max", 255},
+                                                              {"b_min", 0},
+                                                              {"b_max", 255}},
+                         m_flag{false}
     {
     }
 
@@ -14,104 +20,213 @@ namespace Lidar_Simulation
     void K_Means::kMeansClustering(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points, const size_t &t_cluster_number)
     {
 
-        pcl::PointCloud<pcl::PointXYZRGB>::Ptr t_cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
+        m_flag = true;
 
-        t_cloud->width = t_lidar_points->size();
-        t_cloud->height = 1;
-        t_cloud->points.resize(t_cloud->width * t_cloud->height);
+        pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
 
-        for (size_t i{0}; i < t_lidar_points->size(); i++)
+        cloud->width = t_lidar_points->size();
+
+        cloud->height = 1;
+
+        cloud->points.resize(cloud->width * cloud->height);
+
+        std::uniform_real_distribution<double> distr_x;
+
+        std::uniform_real_distribution<double> distr_y;
+
+        std::uniform_real_distribution<double> distr_z;
+
+        std::random_device rd_x;
+
+        std::random_device rd_y;
+
+        std::random_device rd_z;
+
+        std::mt19937 eng_x(rd_x());
+
+        std::mt19937 eng_y(rd_y());
+
+        std::mt19937 eng_z(rd_z());
+
+        distr_x = std::uniform_real_distribution<double>(m_points_color_range["r_min"], m_points_color_range["r_max"]);
+
+        distr_y = std::uniform_real_distribution<double>(m_points_color_range["g_min"], m_points_color_range["g_max"]);
+
+        distr_z = std::uniform_real_distribution<double>(m_points_color_range["b_min"], m_points_color_range["b_max"]);
+
+        for (size_t i = 0; i < cloud->points.size(); ++i)
         {
 
-            std::uniform_real_distribution<double> distr_r;
+            cloud->points[i].x = t_lidar_points->at(i).at(0).at(0);
 
-            std::uniform_real_distribution<double> distr_g;
+            cloud->points[i].y = t_lidar_points->at(i).at(1).at(0);
 
-            std::uniform_real_distribution<double> distr_b;
+            cloud->points[i].z = t_lidar_points->at(i).at(2).at(0);
 
-            std::random_device rd_r;
+            cloud->points[i].r = int(distr_x(eng_x));
 
-            std::random_device rd_g;
+            cloud->points[i].g = int(distr_y(eng_y));
 
-            std::random_device rd_b;
-
-            std::mt19937 eng_r(rd_r());
-
-            std::mt19937 eng_g(rd_g());
-
-            std::mt19937 eng_b(rd_b());
-
-            distr_r = std::uniform_real_distribution<double>(m_points_color_range["r_min"], m_points_color_range["r_max"]);
-
-            distr_g = std::uniform_real_distribution<double>(m_points_color_range["g_min"], m_points_color_range["g_max"]);
-
-            distr_b = std::uniform_real_distribution<double>(m_points_color_range["b_min"], m_points_color_range["b_max"]);
-
-            t_cloud->points[i].x = t_lidar_points->at(i).at(0).at(0);
-            t_cloud->points[i].y = t_lidar_points->at(i).at(1).at(0);
-            t_cloud->points[i].z = t_lidar_points->at(i).at(2).at(0);
-            t_cloud->points[i].r = 0;
-            t_cloud->points[i].g = 10;
-            t_cloud->points[i].b = 40;
-
-            std::cout << "disr_r: " << distr_r(eng_r) << std::endl;
-            std::cout << "disr_g: " << distr_g(eng_g) << std::endl;
-            std::cout << "disr_b: " << distr_b(eng_b) << std::endl;
+            cloud->points[i].b = int(distr_z(eng_z));
         }
 
-        pcl::visualization::PCLVisualizer viewer("t_cloud viewer");
+        m_pcl_cloud = cloud;
+        m_cluster_number = t_cluster_number;
 
-        viewer.addPointCloud(t_cloud, "t_cloud");
+        pcl::Kmeans real(static_cast<int>(cloud->size()), 3);
 
-        viewer.setBackgroundColor(0, 0, 0);
+        real.setClusterSize(static_cast<int>(t_cluster_number));
 
-        viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "t_cloud",1);
+        for (size_t i = 0; i < cloud->size(); ++i)
+        {
 
-        viewer.addCoordinateSystem(1.0);
+            std::vector<float> data(3);
 
-        viewer.initCameraParameters();
+            data[0] = cloud->points[i].x;
+
+            data[1] = cloud->points[i].y;
+
+            data[2] = cloud->points[i].z;
+            real.addDataPoint(data);
+        }
+
+        real.kMeans();
+
+        // get the cluster ceontroid
+
+        pcl::Kmeans::Centroids centroids = real.get_centroids();
+
+        for (size_t i{0}; i < centroids.size(); i++)
+        {
+
+            std::cout << i << "_cent output: x: " << centroids[i][0] << " ,";
+            std::cout << "y: " << centroids[i][1] << " ,";
+            std::cout << "z: " << centroids[i][2] << std::endl;
+        }
+
+        printf("points in total cloud: %d \t", static_cast<int>(cloud->size()));
+        printf("cluster number: %d \t", static_cast<int>(t_cluster_number));
+        printf("centroids size: %d \t", static_cast<int>(centroids.size()));
+
+        // visualize the centroid cloud
+
+        pcl::PointCloud<pcl::PointXYZRGB>::Ptr centroid_cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
+
+        centroid_cloud->width = centroids.size();
+
+        centroid_cloud->height = 1;
+
+        centroid_cloud->points.resize(centroid_cloud->width * centroid_cloud->height);
+
+        for (size_t i = 0; i < centroid_cloud->points.size(); ++i)
+        {
+
+            centroid_cloud->points[i].x = centroids[i][0];
+
+            centroid_cloud->points[i].y = centroids[i][1];
+
+            centroid_cloud->points[i].z = centroids[i][2];
+
+            centroid_cloud->points[i].r = int(distr_x(eng_x));
+
+            centroid_cloud->points[i].g = int(distr_y(eng_y));
+
+            centroid_cloud->points[i].b = int(distr_z(eng_z));
+        }
+
+        m_centroid_cloud = centroid_cloud;
+
+        std::thread t1(&K_Means::clusteredCloudVisualizationThread, this, centroid_cloud, t_cluster_number);
+
+        t1.detach();
+        m_flag = false;
+        std::cout << std::endl;
+        std::cout << std::endl;
     }
-    cv::Mat K_Means::getKMeansMat(cv::Mat &t_mat, const size_t &t_cluster_number)
+
+    void K_Means::rawpointCloudVisualizationThread(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points)
     {
-        cv::Mat labels;
-        cv::Mat centers;
-        cv::kmeans(t_mat, t_cluster_number, labels, cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::COUNT, 10, 1.0), 3, cv::KMEANS_PP_CENTERS, centers);
-        return centers;
+
+        pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
+
+        cloud->width = t_lidar_points->size();
+
+        cloud->height = 1;
+
+        cloud->points.resize(cloud->width * cloud->height);
+
+        std::uniform_real_distribution<double> distr_x;
+
+        std::uniform_real_distribution<double> distr_y;
+
+        std::uniform_real_distribution<double> distr_z;
+
+        std::random_device rd_x;
+
+        std::random_device rd_y;
+
+        std::random_device rd_z;
+
+        std::mt19937 eng_x(rd_x());
+
+        std::mt19937 eng_y(rd_y());
+
+        std::mt19937 eng_z(rd_z());
+
+        distr_x = std::uniform_real_distribution<double>(m_points_color_range["r_min"], m_points_color_range["r_max"]);
+
+        distr_y = std::uniform_real_distribution<double>(m_points_color_range["g_min"], m_points_color_range["g_max"]);
+
+        distr_z = std::uniform_real_distribution<double>(m_points_color_range["b_min"], m_points_color_range["b_max"]);
+
+        for (size_t i = 0; i < cloud->points.size(); ++i)
+        {
+
+            cloud->points[i].x = t_lidar_points->at(i).at(0).at(0);
+
+            cloud->points[i].y = t_lidar_points->at(i).at(1).at(0);
+
+            cloud->points[i].z = t_lidar_points->at(i).at(2).at(0);
+
+            cloud->points[i].r = int(distr_x(eng_x));
+
+            cloud->points[i].g = int(distr_y(eng_y));
+
+            cloud->points[i].b = int(distr_z(eng_z));
+        }
+
+        pcl::visualization::PCLVisualizer viewer("raw point cloud");
+
+        viewer.addPointCloud(cloud, "cloud");
+
+        viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "cloud");
+
+        viewer.setBackgroundColor(0.0, 0.0, 0.0);
+
+        viewer.spin();
+
+        viewer.close();
+    }
+
+    void K_Means::clusteredCloudVisualizationThread(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, const size_t &t_cluster_number)
+    {
+        pcl::visualization::PCLVisualizer viewer("clustered point cloud");
+
+        viewer.addPointCloud(cloud, "cloud");
+
+        viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "cloud");
+
+        viewer.setBackgroundColor(0.0, 0.0, 0.0);
+
+        viewer.spin();
+
+        viewer.close();
+    }
+
+    void K_Means::callRawData(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points)
+    {
+        std::thread t1(&K_Means::rawpointCloudVisualizationThread, this, t_lidar_points);
+
+        t1.detach();
     }
 }
-
-// cv::Mat t_mat;
-// t_mat.create(t_lidar_points->size(), 6, CV_32FC1);
-// cv::Mat bestLabels, centers, clustered;
-
-// for (size_t i{0}; i < t_lidar_points->size(); i++)
-// {
-//     t_mat.at<float>(i, 0) = t_lidar_points->at(i).at(0).at(0);
-//     t_mat.at<float>(i, 1) = t_lidar_points->at(i).at(1).at(0);
-//     t_mat.at<float>(i, 2) = t_lidar_points->at(i).at(2).at(0);
-//     t_mat.at<float>(i, 3) =50;
-//     t_mat.at<float>(i, 4) =130;
-//     t_mat.at<float>(i, 5) =270;
-// }
-
-// cv::kmeans(t_mat,t_cluster_number,bestLabels, cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::COUNT, 10, 1.0), 3, cv::KMEANS_PP_CENTERS, centers);
-
-// int colors[t_cluster_number];
-
-// for (size_t i{0}; i < t_cluster_number; i++)
-// {
-//     colors[i] =255 / t_cluster_number * i;
-// }
-
-// clustered.create(t_lidar_points->size(), 3, CV_32FC1);
-
-// for (size_t i{0}; i < t_lidar_points->size(); i++)
-// {
-//     clustered.at<float>(i, 0) = colors[bestLabels.at<int>(i, 0)];
-//     clustered.at<float>(i, 1) = colors[bestLabels.at<int>(i, 0)];
-//     clustered.at<float>(i, 2) = colors[bestLabels.at<int>(i, 0)];
-// }
-
-// clustered.convertTo(clustered,CV_8U);
-// cv::imshow("Clustered", clustered);
-// cv::waitKey(0);

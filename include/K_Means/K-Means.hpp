@@ -39,11 +39,25 @@ namespace Lidar_Simulation
 
         double m_inertia;
 
-            std::unordered_map<std::string, double> m_points_color_range;
+        std::unordered_map<std::string, double> m_points_color_range;
+
+        pcl::PointCloud<pcl::PointXYZRGB>::Ptr m_pcl_cloud;
+
+        size_t m_cluster_number;
+
+        std::chrono::seconds* m_rate;
+
+        bool m_flag;
+
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr m_centroid_cloud;
 
         void kMeansClustering(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points, const size_t &t_cluster_number);
 
-        cv::Mat getKMeansMat(cv::Mat &t_mat, const size_t &t_cluster_number);
+        void rawpointCloudVisualizationThread(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points);
+
+        void clusteredCloudVisualizationThread(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, const size_t &t_cluster_number);
+
+        void callRawData(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points);
     };
 } // Namespace  Lidar_Simulation
 

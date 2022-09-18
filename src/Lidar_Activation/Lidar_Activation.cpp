@@ -94,9 +94,26 @@ namespace Lidar_Simulation
 
             else if (m_options == 3)
             {
-                std::cout << "Enter the number of clusters: ";
-                std::cin >> m_cluster_number;
-                kMeansClustering(m_lidar_points_3d, m_cluster_number);
+
+                std::cout << "[" << __APP_NAME__ << "] 1. Visulize Raw Data" << std::endl;
+
+                std::cout << "[" << __APP_NAME__ << "] 2. Execute K-Means Clustering" << std::endl;
+
+                std::cout << "-----------Option----------->";
+
+                std::cin >> m_options;
+
+                if (m_options == 1)
+                {
+                    m_k_means.callRawData(m_lidar_points_3d);
+                }
+                else if (m_options == 2)
+                {
+                    std::cout << "Enter the number of clusters: ";
+                    std::cin >> m_cluster_number;
+                    m_k_means.kMeansClustering(m_lidar_points_3d, m_cluster_number);
+                }
+                std::cout << std::endl;
             }
 
             else if (m_options == 4)

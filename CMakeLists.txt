@@ -76,6 +76,7 @@ add_dependencies(k_means_core
 target_link_libraries(k_means_core
         ${OpenCV_LIBS}
         ${PCL_LIBRARIES}
+        ${CMAKE_THREAD_LIBS_INIT}
         
         )
 
