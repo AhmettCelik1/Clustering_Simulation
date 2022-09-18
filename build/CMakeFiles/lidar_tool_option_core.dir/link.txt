@@ -1,2 +1,0 @@
-/usr/bin/ar qc liblidar_tool_option_core.a  CMakeFiles/lidar_tool_option_core.dir/src/Lidar_Tool_Option/Lidar_Tool_Option.cpp.o
-/usr/bin/ranlib liblidar_tool_option_core.a

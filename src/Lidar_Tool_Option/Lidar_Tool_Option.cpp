@@ -1,21 +1,9 @@
-#include "/home/ahmet/Workspaces/cpp_ws/Lidar_Simulation/include/Lidar_Tool_Option/Lidar_Tool_Option.hpp"
+#include "../../include/Lidar_Tool_Option/Lidar_Tool_Option.hpp"
 
 namespace Lidar_Simulation
 {
-    Lidar_Tool_Option::Lidar_Tool_Option()
-        : eng_x(rd_x()), eng_y(rd_y()), eng_z(rd_z())
+    Lidar_Tool_Option::Lidar_Tool_Option() : m_points_range{{"x_min", 0}, {"x_max", 10}, {"y_min", -3}, {"y_max", 3}, {"z_min", -1}, {"z_max", 3}}
     {
-
-        m_points_range["x_min"] = 0;
-        m_points_range["x_max"] = 10;
-        m_points_range["y_min"] = -3;
-        m_points_range["y_max"] = 3;
-        m_points_range["z_min"] = -1;
-        m_points_range["z_max"] = 3;
-
-        distr_x = std::uniform_real_distribution<double>(m_points_range["x_min"], m_points_range["x_max"]);
-        distr_y = std::uniform_real_distribution<double>(m_points_range["y_min"], m_points_range["y_max"]);
-        distr_z = std::uniform_real_distribution<double>(m_points_range["z_min"], m_points_range["z_max"]);
     }
     Lidar_Tool_Option::~Lidar_Tool_Option()
     {
@@ -27,6 +15,30 @@ namespace Lidar_Simulation
 
         std::cout << "---------------------------------------------------" << std::endl;
         std::cout << std::endl;
+
+        std::uniform_real_distribution<double> distr_x;
+
+        std::uniform_real_distribution<double> distr_y;
+
+        std::uniform_real_distribution<double> distr_z;
+
+        std::random_device rd_x;
+
+        std::random_device rd_y;
+
+        std::random_device rd_z;
+
+        std::mt19937 eng_x(rd_x());
+
+        std::mt19937 eng_y(rd_y());
+
+        std::mt19937 eng_z(rd_z());
+
+        distr_x = std::uniform_real_distribution<double>(m_points_range["x_min"], m_points_range["x_max"]);
+
+        distr_y = std::uniform_real_distribution<double>(m_points_range["y_min"], m_points_range["y_max"]);
+
+        distr_z = std::uniform_real_distribution<double>(m_points_range["z_min"], m_points_range["z_max"]);
 
         m_size = t_size;
 
@@ -47,9 +59,9 @@ namespace Lidar_Simulation
 
             t_lidar_points->at(i).at(0).at(0) = distr_x(eng_x);
 
-            t_lidar_points->at(i).at(1).at(0) = distr_x(eng_x);
+            t_lidar_points->at(i).at(1).at(0) = distr_y(eng_y);
 
-            t_lidar_points->at(i).at(2).at(0) = distr_x(eng_x);
+            t_lidar_points->at(i).at(2).at(0) = distr_z(eng_z);
         }
 
         return t_lidar_points;

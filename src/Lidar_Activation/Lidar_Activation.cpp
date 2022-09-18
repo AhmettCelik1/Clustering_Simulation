@@ -1,4 +1,4 @@
-#include "/home/ahmet/Workspaces/cpp_ws/Lidar_Simulation/include/Lidar_Activation/Lidar_Activation.hpp"
+#include "../../include/Lidar_Activation/Lidar_Activation.hpp"
 
 namespace Lidar_Simulation
 {
@@ -9,12 +9,12 @@ namespace Lidar_Simulation
     Lidar_Activation::Lidar_Activation(const size_t &t_size)
         : m_size{t_size},
           Lidar_Utils(),
+          K_Means(),
+          m_lidar_points_3d{nullptr},
           m_flag{false}
 
     {
         std::cout << "[" << __APP_NAME__ << "] Constructor Lidar Activation  is called." << std::endl;
-
-        m_lidar_points = std::make_shared<std::vector<std::array<double, 3>>>();
 
         m_lidar_points_3d = std::make_shared<std::vector<std::vector<std::vector<double>>>>();
 
@@ -63,21 +63,24 @@ namespace Lidar_Simulation
 
             std::cout << "[" << __APP_NAME__ << "] 2. Decrese Density of Lidar Points" << std::endl;
 
-            std::cout << "[" << __APP_NAME__ << "] 3. Print Lidar Points " << std::endl;
+            std::cout << " [" << __APP_NAME__ << "] 3. Execute K Means Clustering " << std::endl;
 
-            std::cout << "[ " << __APP_NAME__ << "] 4. Exit " << std::endl;
+            std::cout << "[" << __APP_NAME__ << "] 4. Print Lidar Points " << std::endl;
+
+            std::cout << "[ " << __APP_NAME__ << "] 5. Exit " << std::endl;
 
             std::cout << "-----------Option----------->";
 
             std::cin >> m_options;
 
-            // system("clear");
+            system("clear");
 
             if (m_options == 1)
             {
 
                 m_lidar_points_3d = m_lidar_utils.sizeIncreaser(m_lidar_points_3d);
                 std::cout << "THE SIZE OF THE LIDAR----->" << m_lidar_points_3d->size() << std::endl;
+                m_lidar_utils.lidarPointsPrinter(m_lidar_points_3d);
                 std::cout << std::endl;
             }
 
@@ -85,17 +88,25 @@ namespace Lidar_Simulation
             {
                 m_lidar_points_3d = m_lidar_utils.sizeDecreaser(m_lidar_points_3d);
                 std::cout << "THE SIZE OF THE LIDAR----->" << m_lidar_points_3d->size() << std::endl;
+                m_lidar_utils.lidarPointsPrinter(m_lidar_points_3d);
                 std::cout << std::endl;
             }
 
             else if (m_options == 3)
+            {
+                std::cout << "Enter the number of clusters: ";
+                std::cin >> m_cluster_number;
+                kMeansClustering(m_lidar_points_3d, m_cluster_number);
+            }
+
+            else if (m_options == 4)
             {
                 m_lidar_utils.lidarPointsPrinter(m_lidar_points_3d);
                 std::cout << "THE SIZE OF THE LIDAR----->" << m_lidar_points_3d->size() << std::endl;
                 std::cout << std::endl;
             }
 
-            else if (m_options == 4)
+            else if (m_options == 5)
             {
                 std::cout << "-----------------Exited------------" << std::endl;
 
@@ -108,7 +119,7 @@ namespace Lidar_Simulation
 
                 std::cout << std::endl;
             }
-        } while (m_options != 4);
+        } while (m_options != 5);
     }
 
 }

@@ -11,15 +11,17 @@
 #include <random>
 #include <chrono>
 
-#include "/home/ahmet/Workspaces/cpp_ws/Lidar_Simulation/include/Lidar_Utils/Lidar_Utils.hpp"
-#include "/home/ahmet/Workspaces/cpp_ws/Lidar_Simulation/include/Lidar_Tool_Option/Lidar_Tool_Option.hpp"
+#include "../../include/Lidar_Utils/Lidar_Utils.hpp"
+#include "../../include/Lidar_Tool_Option/Lidar_Tool_Option.hpp"
+#include "../../include/K_Means/K-Means.hpp"
+
 
 #define __APP_NAME__ "Lidar_Activation"
 
 namespace Lidar_Simulation
 {
 
-    class Lidar_Activation final : protected Lidar_Utils // prevent Lidar_Activation class be derived from
+    class Lidar_Activation final : protected Lidar_Utils, protected K_Means  // prevent Lidar_Activation class be derived from
     {
         friend std::ostream &operator<<(std::ostream &os, const Lidar_Activation &lidar_activation);
 
@@ -36,13 +38,15 @@ namespace Lidar_Simulation
         //! Get the number of objects.
         static size_t m_number_objects;
 
-        std::shared_ptr<std::vector<std::array<double, 3>>> m_lidar_points;
-
         std::shared_ptr<std::vector<std::vector<std::vector<double>>>> m_lidar_points_3d;
 
         Lidar_Utils m_lidar_utils;
 
         Lidar_Tool_Option m_lidar_tool_option;
+
+        K_Means m_k_means;
+
+        size_t m_cluster_number;
 
         bool m_flag{};
         /*!

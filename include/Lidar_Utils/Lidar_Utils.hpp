@@ -10,7 +10,7 @@
 #include <memory>
 #include <random>
 
-#include "/home/ahmet/Workspaces/cpp_ws/Lidar_Simulation/include/Lidar_Tool_Option/Lidar_Tool_Option.hpp"
+#include "../../include/Lidar_Tool_Option/Lidar_Tool_Option.hpp"
 
 namespace Lidar_Simulation
 {

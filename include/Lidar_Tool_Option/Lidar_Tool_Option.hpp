@@ -24,24 +24,6 @@ namespace Lidar_Simulation
 
     std::unordered_map<std::string, double> m_points_range;
 
-    std::uniform_real_distribution<double> distr_x;
-
-    std::uniform_real_distribution<double> distr_y;
-
-    std::uniform_real_distribution<double> distr_z;
-
-    std::random_device rd_x;
-
-    std::random_device rd_y;
-
-    std::random_device rd_z;
-
-    std::default_random_engine eng_x;
-
-    std::default_random_engine eng_y;
-
-    std::default_random_engine eng_z;
-
     virtual std::shared_ptr<std::vector<std::vector<std::vector<double>>>> generatorLidarPoints(std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points, const size_t &t_size) final; // prevent a method to be overriden
 
     virtual void lidarPointsPrinter(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points);

@@ -1,2 +1,0 @@
-/usr/bin/ar qc libutils_core.a  CMakeFiles/utils_core.dir/src/Lidar_Utils/Lidar_Utils.cpp.o
-/usr/bin/ranlib libutils_core.a

@@ -1,4 +1,4 @@
-#include "/home/ahmet/Workspaces/cpp_ws/Lidar_Simulation/include/Lidar_Utils/Lidar_Utils.hpp"
+#include "../../include/Lidar_Utils/Lidar_Utils.hpp"
 
 namespace Lidar_Simulation
 {
@@ -45,15 +45,18 @@ namespace Lidar_Simulation
 
         m_size = t_lidar_points->size();
 
-        m_size = m_size +(m_size * m_percantage / 100);
+        m_size = m_size + (m_size * m_percantage / 100);
 
         t_lidar_points->resize(m_size);
 
-        t_lidar_points = m_lidar_tool_option.generatorLidarPoints(t_lidar_points, m_size);
-
-        return t_lidar_points;
         std::cout << "---------------------------------------------------" << std::endl;
         std::cout << std::endl;
+
+        t_lidar_points = m_lidar_tool_option.generatorLidarPoints(t_lidar_points, m_size);
+
+        std::cout << "---------------------------------------------------" << std::endl;
+        std::cout << std::endl;
+        return t_lidar_points;
     }
 
     std::shared_ptr<std::vector<std::vector<std::vector<double>>>> Lidar_Utils::sizeDecreaser(std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points)
