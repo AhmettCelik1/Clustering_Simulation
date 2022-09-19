@@ -19,6 +19,7 @@
 #include "pcl/point_cloud.h"
 #include "pcl/io/pcd_io.h"
 #include "pcl/visualization/pcl_visualizer.h"
+#include "pcl/visualization/cloud_viewer.h"
 #include "pcl/ml/kmeans.h"
 #include <pcl/search/search.h>
 #include <pcl/kdtree/kdtree.h>
@@ -35,29 +36,51 @@ namespace Lidar_Simulation
 
         ~K_Means();
 
-        cv::Mat t_mat;
-
-        double m_inertia;
-
         std::unordered_map<std::string, double> m_points_color_range;
 
-        pcl::PointCloud<pcl::PointXYZRGB>::Ptr m_pcl_cloud;
+        std::uniform_real_distribution<double> distr_r;
+
+        std::uniform_real_distribution<double> distr_g;
+
+        std::uniform_real_distribution<double> distr_b;
+
+        std::random_device rd_r;
+
+        std::random_device rd_g;
+
+        std::random_device rd_b;
+
+        std::mt19937 eng_r;
+
+        std::mt19937 eng_g;
+
+        std::mt19937 eng_b;
+
+        std::shared_ptr<std::vector<std::vector<std::vector<double>>>> m_lidar_points;
+
+        pcl::PointCloud<pcl::PointXYZRGB>::Ptr m_cloud;
+
+        pcl::PointCloud<pcl::PointXYZRGB>::Ptr m_cloud_cluster;
 
         size_t m_cluster_number;
 
-        std::chrono::seconds* m_rate;
+        vtkRenderWindowInteractor *m_interactor;
+
+        std::thread m_cluster_thread;
+
+        std::thread m_raw_thread;
 
         bool m_flag;
 
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr m_centroid_cloud;
-
         void kMeansClustering(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points, const size_t &t_cluster_number);
 
-        void rawpointCloudVisualizationThread(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points);
+        void rawpointCloudVisualizationThread();
 
-        void clusteredCloudVisualizationThread(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, const size_t &t_cluster_number);
+        void clusteredCloudVisualizationThread();
 
         void callRawData(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points);
+
+        void pclPointCloudConverter(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points, pcl::PointCloud<pcl::PointXYZRGB>::Ptr &t_cloud);
     };
 } // Namespace  Lidar_Simulation
 
