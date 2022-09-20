@@ -81,6 +81,70 @@ target_link_libraries(k_means_core
         )
 
 
+## Declare a cpp library
+add_library(euclidean_clustering_core
+        src/Euclidean_Clustering/Euclidean_Clustering.cpp
+        )
+
+include_directories(
+        include
+        ${OpenCV_INCLUDE_DIRS}
+        ${PCL_INCLUDE_DIRS}
+        ${Boost_INCLUDE_DIRS}
+        )
+
+link_directories(${PCL_LIBRARY_DIRS})
+
+add_definitions(${PCL_DEFINITIONS})
+
+target_compile_features(euclidean_clustering_core INTERFACE cxx_std_11)
+
+## Add dependencies to exported targets, like ROS msgs or srvs
+add_dependencies(euclidean_clustering_core
+        ${OpenCV_LIBS}
+        )
+
+## Specify libraries to link executable targets against
+target_link_libraries(euclidean_clustering_core
+        ${OpenCV_LIBS}
+        ${PCL_LIBRARIES}
+        ${CMAKE_THREAD_LIBS_INIT}
+        
+        )
+
+
+## Declare a cpp library
+add_library(dbscan_clustering_core
+        src/DBscan_Clustering/DBscan_Clustering.cpp
+        )
+
+include_directories(
+        include
+        ${OpenCV_INCLUDE_DIRS}
+        ${PCL_INCLUDE_DIRS}
+        ${Boost_INCLUDE_DIRS}
+        )
+
+link_directories(${PCL_LIBRARY_DIRS})
+
+add_definitions(${PCL_DEFINITIONS})
+
+target_compile_features(dbscan_clustering_core INTERFACE cxx_std_11)
+
+## Add dependencies to exported targets, like ROS msgs or srvs
+add_dependencies(dbscan_clustering_core
+        ${OpenCV_LIBS}
+        )
+
+## Specify libraries to link executable targets against
+target_link_libraries(dbscan_clustering_core
+        ${OpenCV_LIBS}
+        ${PCL_LIBRARIES}
+        ${CMAKE_THREAD_LIBS_INIT}
+        
+        )
+
+
 
 ## Declare cpp executables
 add_executable(main
@@ -89,6 +153,8 @@ add_executable(main
         src/Lidar_Tool_Option/Lidar_Tool_Option.cpp
         src/Lidar_Activation/Lidar_Activation.cpp
         src/K_Means/K_Means.cpp
+        src/Euclidean_Clustering/Euclidean_Clustering.cpp
+        src/DBscan_Clustering/DBscan_Clustering.cpp
         )
 
 target_compile_features(main INTERFACE cxx_std_11)

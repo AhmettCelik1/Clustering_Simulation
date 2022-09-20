@@ -65,9 +65,13 @@ namespace Lidar_Simulation
 
             std::cout << " [" << __APP_NAME__ << "] 3. Execute K Means Clustering " << std::endl;
 
-            std::cout << "[" << __APP_NAME__ << "] 4. Print Lidar Points " << std::endl;
+            std::cout << "[" << __APP_NAME__ << "] 4. Execute Ecludian Clustering " << std::endl;
 
-            std::cout << "[ " << __APP_NAME__ << "] 5. Exit " << std::endl;
+            std::cout << "[" << __APP_NAME__ << "] 5. Execute DBscan Clustering " << std::endl;
+
+            std::cout << "[" << __APP_NAME__ << "] 6. Print Lidar Points " << std::endl;
+
+            std::cout << "[ " << __APP_NAME__ << "] 7. Exit " << std::endl;
 
             std::cout << "-----------Option----------->";
 
@@ -118,12 +122,31 @@ namespace Lidar_Simulation
 
             else if (m_options == 4)
             {
+                std::cout << "enter a tolerance value: ";
+                std::cin >> m_tolerance;
+
+                m_euclidean_clustering.executeEcludianClustering(m_lidar_points_3d, m_tolerance);
+            }
+
+            else if (m_options == 5)
+            {
+                
+                std::cout << "Enter the minimum number of points in a cluster: ";
+                std::cin >> m_min_points;
+                std::cout << "Enter the maximum distance between two points: ";
+                std::cin >> m_eps;
+
+                m_dbscan_clustering.executeDBscanClustering(m_lidar_points_3d, m_min_points, m_eps);
+            }
+
+            else if (m_options == 6)
+            {
                 m_lidar_utils.lidarPointsPrinter(m_lidar_points_3d);
                 std::cout << "THE SIZE OF THE LIDAR----->" << m_lidar_points_3d->size() << std::endl;
                 std::cout << std::endl;
             }
 
-            else if (m_options == 5)
+            else if (m_options == 7)
             {
                 std::cout << "-----------------Exited------------" << std::endl;
 
@@ -136,7 +159,7 @@ namespace Lidar_Simulation
 
                 std::cout << std::endl;
             }
-        } while (m_options != 5);
+        } while (m_options != 7);
     }
 
 }

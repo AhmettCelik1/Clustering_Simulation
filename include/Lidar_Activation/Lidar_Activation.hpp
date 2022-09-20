@@ -14,6 +14,8 @@
 #include "../../include/Lidar_Utils/Lidar_Utils.hpp"
 #include "../../include/Lidar_Tool_Option/Lidar_Tool_Option.hpp"
 #include "../../include/K_Means/K-Means.hpp"
+#include "../../include/Euclidean_Clustering/Euclidean_Clustering.hpp"
+#include "../../include/DBscan_Clustering/DBscan_Clustering.hpp"
 
 
 #define __APP_NAME__ "Lidar_Activation"
@@ -21,7 +23,7 @@
 namespace Lidar_Simulation
 {
 
-    class Lidar_Activation final : protected Lidar_Utils, protected K_Means  // prevent Lidar_Activation class be derived from
+    class Lidar_Activation final : protected Lidar_Utils, protected K_Means, protected Euclidean_Clustering ,protected  DBscan_Clustering // prevent Lidar_Activation class be derived from
     {
         friend std::ostream &operator<<(std::ostream &os, const Lidar_Activation &lidar_activation);
 
@@ -46,7 +48,17 @@ namespace Lidar_Simulation
 
         K_Means m_k_means;
 
+        Euclidean_Clustering m_euclidean_clustering;
+
+        DBscan_Clustering m_dbscan_clustering;
+
         size_t m_cluster_number;
+
+        double m_min_points;
+
+        double m_eps;
+
+        double m_tolerance;
 
         bool m_flag{};
         /*!

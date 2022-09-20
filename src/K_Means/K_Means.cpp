@@ -110,6 +110,7 @@ namespace Lidar_Simulation
             centroid_cloud->points[i].g = int(distr_g(eng_g));
 
             centroid_cloud->points[i].b = int(distr_b(eng_b));
+
         }
 
         m_cloud_cluster = centroid_cloud;

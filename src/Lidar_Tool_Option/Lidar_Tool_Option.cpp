@@ -2,7 +2,7 @@
 
 namespace Lidar_Simulation
 {
-    Lidar_Tool_Option::Lidar_Tool_Option() : m_points_range{{"x_min", 0}, {"x_max", 10}, {"y_min", -3}, {"y_max", 3}, {"z_min", -1}, {"z_max", 3}}
+    Lidar_Tool_Option::Lidar_Tool_Option() : m_points_range{{"x_min", -10}, {"x_max", 45}, {"y_min", -20}, {"y_max", 20}, {"z_min", -5}, {"z_max", 10}}
     {
     }
     Lidar_Tool_Option::~Lidar_Tool_Option()
