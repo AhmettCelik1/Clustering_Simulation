@@ -43,8 +43,9 @@ namespace Clustering_Simulation
 
         displayActiveObjects();
 
-        std::thread thread_1(&Clustering_Activation::showMenu, this);
-        thread_1.join();
+        m_thread_menu = std::thread(&Clustering_Activation::showMenu, this);
+
+        m_thread_menu.join();
     }
 
     Clustering_Activation::~Clustering_Activation()
@@ -169,6 +170,8 @@ namespace Clustering_Simulation
                 std::cout << std::endl;
             }
         } while (m_options != 8);
+
+        m_thread_menu.detach();
     }
 
 }
