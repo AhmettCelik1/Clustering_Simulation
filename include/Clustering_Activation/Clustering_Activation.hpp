@@ -63,6 +63,8 @@ namespace Clustering_Simulation
 
         double m_tolerance;
 
+        std::thread m_thread_menu;
+
         /*!
          * CounterObjects.
          * @return size of how many object is created  if successful.

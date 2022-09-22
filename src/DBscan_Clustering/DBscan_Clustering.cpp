@@ -74,12 +74,16 @@ namespace Clustering_Simulation
         if (cloud_clustered->points.size() > 0)
         {
             printf("Number of clusters is equal to %d", j);
+            std::cout << std::endl;
         }
         else
         {
             printf("No clusters found in the point cloud data");
+            std::cout << std::endl;
             printf("Number of clusters is equal to %d", j);
+            std::cout << std::endl;
             printf("Change the parameters of DBscan clustering");
+            std::cout << std::endl;
         }
 
         // Print Clustered Groups Coordinates
