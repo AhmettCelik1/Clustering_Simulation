@@ -30,7 +30,7 @@
 
 #include "../../include/K_Means/K-Means.hpp"
 
-namespace Lidar_Simulation
+namespace Clustering_Simulation
 {
     class Euclidean_Clustering : protected K_Means
 
@@ -41,31 +41,9 @@ namespace Lidar_Simulation
 
         ~Euclidean_Clustering();
 
-        K_Means m_k_means;
+        std::shared_ptr<K_Means> m_k_means;
 
-        pcl::PointCloud<pcl::PointXYZ>::Ptr m_cloud;
-
-        std::unordered_map<std::string, double> m_points_color_range;
-
-        std::uniform_real_distribution<double> distr_r;
-
-        std::uniform_real_distribution<double> distr_g;
-
-        std::uniform_real_distribution<double> distr_b;
-
-        std::random_device rd_r;
-
-        std::random_device rd_g;
-
-        std::random_device rd_b;
-
-        std::mt19937 eng_r;
-
-        std::mt19937 eng_g;
-
-        std::mt19937 eng_b;
-
-        void executeEcludianClustering(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points,const double t_tolarance);
+        void executeEcludianClustering(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points, const double t_tolarance);
 
         void viewerClusterCloud(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &t_cloud);
     };

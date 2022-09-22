@@ -12,7 +12,7 @@
 
 #include "../../include/Lidar_Tool_Option/Lidar_Tool_Option.hpp"
 
-namespace Lidar_Simulation
+namespace Clustering_Simulation
 {
     class Lidar_Utils : protected Lidar_Tool_Option
 
@@ -22,27 +22,7 @@ namespace Lidar_Simulation
 
         virtual ~Lidar_Utils();
 
-        std::unordered_map<std::string, double> m_points_range;
-
-        std::uniform_real_distribution<double> distr_x{};
-
-        std::uniform_real_distribution<double> distr_y{};
-
-        std::uniform_real_distribution<double> distr_z{};
-
-        std::random_device rd_x{};
-
-        std::random_device rd_y{};
-
-        std::random_device rd_z{};
-
-        std::default_random_engine eng_x{};
-
-        std::default_random_engine eng_y{};
-
-        std::default_random_engine eng_z{};
-
-        Lidar_Tool_Option m_lidar_tool_option;
+       std::shared_ptr<Lidar_Tool_Option> m_lidar_tool_option;
 
         size_t m_size;
 

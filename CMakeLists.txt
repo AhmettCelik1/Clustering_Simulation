@@ -31,19 +31,19 @@ target_compile_features(lidar_tool_option_core INTERFACE cxx_std_11)
 
 
 ## Declare a cpp library
-add_library(lidar_activation_core
-            src/Lidar_Activation/Lidar_Activation.cpp
+add_library(clustering_activation_core
+            src/Clustering_Activation/Clustering_Activation.cpp
         )
-target_compile_features(lidar_activation_core INTERFACE cxx_std_11)
+target_compile_features(clustering_activation_core INTERFACE cxx_std_11)
 
 
 ## Add dependencies to exported targets, like ROS msgs or srvs
-add_dependencies(lidar_activation_core
+add_dependencies(clustering_activation_core
         ${OpenCV_LIBS}
         )
 
 ## Specify libraries to link executable targets against
-target_link_libraries(lidar_activation_core
+target_link_libraries(clustering_activation_core
         ${OpenCV_LIBS}
         )
 
@@ -151,7 +151,7 @@ add_executable(main
         src/main.cpp
         src/Lidar_Utils/Lidar_Utils.cpp
         src/Lidar_Tool_Option/Lidar_Tool_Option.cpp
-        src/Lidar_Activation/Lidar_Activation.cpp
+        src/Clustering_Activation/Clustering_Activation.cpp
         src/K_Means/K_Means.cpp
         src/Euclidean_Clustering/Euclidean_Clustering.cpp
         src/DBscan_Clustering/DBscan_Clustering.cpp
@@ -160,7 +160,7 @@ add_executable(main
 target_compile_features(main INTERFACE cxx_std_11)
 
 target_link_libraries(main
-        lidar_activation_core
+        clustering_activation_core
         utils_core  
         lidar_tool_option_core
         k_means_core

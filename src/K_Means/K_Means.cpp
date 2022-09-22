@@ -1,14 +1,13 @@
 #include "../../include/K_Means/K-Means.hpp"
 
-namespace Lidar_Simulation
+namespace Clustering_Simulation
 {
-    K_Means::K_Means() : m_points_color_range{{"r_min", 0},
+    K_Means::K_Means() : m_points_color_range{{"r_min", 10},
                                               {"r_max", 255},
-                                              {"g_min", 0},
+                                              {"g_min", 10},
                                               {"g_max", 255},
-                                              {"b_min", 0},
+                                              {"b_min", 10},
                                               {"b_max", 255}},
-                         m_flag{false},
                          eng_r(rd_r()), eng_g(rd_g()), eng_b(rd_b())
     {
 
@@ -22,6 +21,7 @@ namespace Lidar_Simulation
     K_Means::~K_Means()
     {
         std::cout << "K_Means destructor is called" << std::endl;
+        std::cout<<std::endl;
     }
 
     void K_Means::pclPointCloudConverter(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points,
@@ -44,8 +44,6 @@ namespace Lidar_Simulation
 
     void K_Means::kMeansClustering(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points, const size_t &t_cluster_number)
     {
-
-        m_flag = true;
 
         pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
 
@@ -110,7 +108,6 @@ namespace Lidar_Simulation
             centroid_cloud->points[i].g = int(distr_g(eng_g));
 
             centroid_cloud->points[i].b = int(distr_b(eng_b));
-
         }
 
         m_cloud_cluster = centroid_cloud;
@@ -145,8 +142,6 @@ namespace Lidar_Simulation
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
 
-        m_flag = false;
-
         viewer.close();
 
         //-----------------------------------------------------------------------
@@ -165,15 +160,17 @@ namespace Lidar_Simulation
 
         m_cloud = cloud;
 
-        // m_raw_thread = std::thread(&K_Means::rawpointCloudVisualizationThread, this);
-
-        // m_raw_thread.detach();
+        m_lidar_points = t_lidar_points;
 
         rawpointCloudVisualizationThread();
     }
 
     void K_Means::rawpointCloudVisualizationThread()
     {
+
+        std::cout << std::endl;
+        std::cout << std::endl;
+        std::cout << " In order to go back menu click on the viewer window and press '❌' " << std::endl;
 
         pcl::visualization::PCLVisualizer viewer("raw point cloud");
 
@@ -185,25 +182,15 @@ namespace Lidar_Simulation
 
         viewer.addCoordinateSystem(1, 0, 0, 0);
 
-        std::cout << std::endl;
-        std::cout << std::endl;
-        std::cout << " Inorder to go back menu click on the viewer window and press '❌' " << std::endl;
-
         while (!viewer.wasStopped())
         {
             viewer.spinOnce(100);
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
 
-        m_flag = false;
-
         viewer.close();
 
         //-----------------------------------------------------------------------
-
-        // pcl::visualization::CloudViewer cloud_viewer("raw point cloud");
-
-        // cloud_viewer.showCloud(m_cloud);
     }
 
 }

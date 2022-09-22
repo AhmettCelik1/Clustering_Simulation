@@ -1,5 +1,5 @@
-#ifndef _LIDAR_ACTIVATION_H_
-#define _LIDAR_ACTIVATION_H_
+#ifndef _CLUSTERING_ACTIVATION_HPP_
+#define _CLUSTERING_ACTIVATION_HPP_
 
 // C++ System Headers
 #include <iostream>
@@ -17,20 +17,23 @@
 #include "../../include/Euclidean_Clustering/Euclidean_Clustering.hpp"
 #include "../../include/DBscan_Clustering/DBscan_Clustering.hpp"
 
+#define __APP_NAME__ "Clustering_Activation"
 
-#define __APP_NAME__ "Lidar_Activation"
-
-namespace Lidar_Simulation
+namespace Clustering_Simulation
 {
 
-    class Lidar_Activation final : protected Lidar_Utils, protected K_Means, protected Euclidean_Clustering ,protected  DBscan_Clustering // prevent Lidar_Activation class be derived from
+    class Clustering_Activation final : protected Lidar_Utils, // prevent Lidar_Activation class be derived from implemented final keyword
+                                        protected Lidar_Tool_Option,
+                                        protected K_Means,
+                                        protected Euclidean_Clustering,
+                                        protected DBscan_Clustering
     {
-        friend std::ostream &operator<<(std::ostream &os, const Lidar_Activation &lidar_activation);
+        friend std::ostream &operator<<(std::ostream &os, const Clustering_Activation &lidar_activation);
 
     public:
-        Lidar_Activation(const size_t &t_size);
+        Clustering_Activation(const size_t &t_size);
 
-        virtual ~Lidar_Activation();
+        virtual ~Clustering_Activation();
 
     private:
         size_t m_size;
@@ -42,25 +45,24 @@ namespace Lidar_Simulation
 
         std::shared_ptr<std::vector<std::vector<std::vector<double>>>> m_lidar_points_3d;
 
-        Lidar_Utils m_lidar_utils;
+        std::shared_ptr<Lidar_Utils> m_lidar_utils;
 
-        Lidar_Tool_Option m_lidar_tool_option;
+        std::shared_ptr<Lidar_Tool_Option> m_lidar_tool_option;
 
-        K_Means m_k_means;
+        std::shared_ptr<K_Means> m_k_means;
 
-        Euclidean_Clustering m_euclidean_clustering;
+        std::shared_ptr<Euclidean_Clustering> m_euclidean_clustering;
 
-        DBscan_Clustering m_dbscan_clustering;
+        std::shared_ptr<DBscan_Clustering> m_dbscan_clustering;
 
         size_t m_cluster_number;
 
-        double m_min_points;
+        int m_min_points;
 
         double m_eps;
 
         double m_tolerance;
 
-        bool m_flag{};
         /*!
          * CounterObjects.
          * @return size of how many object is created  if successful.
@@ -73,8 +75,8 @@ namespace Lidar_Simulation
          */
         inline void displayActiveObjects() const;
 
-        void threadLidar();
+        inline void showMenu();
     };
 } // Namespace  Lidar_Simulation
 
-#endif // _LIDAR_ACTIVATION_H_
+#endif // _CLUSTERING_ACTIVATION_HPP_

@@ -1,93 +1,103 @@
 #include "../../include/DBscan_Clustering/DBscan_Clustering.hpp"
 
-namespace Lidar_Simulation
+namespace Clustering_Simulation
 {
-    DBscan_Clustering::DBscan_Clustering() : K_Means(),
-                                             m_points_color_range{{"r_min", 0},
-                                                                  {"r_max", 255},
-                                                                  {"g_min", 0},
-                                                                  {"g_max", 255},
-                                                                  {"b_min", 0},
-                                                                  {"b_max", 255}},
-                                             eng_r(rd_r()), eng_g(rd_g()), eng_b(rd_b())
+    DBscan_Clustering::DBscan_Clustering() : K_Means()
     {
-
-        distr_r = std::uniform_real_distribution<double>(m_points_color_range["r_min"], m_points_color_range["r_max"]);
-
-        distr_g = std::uniform_real_distribution<double>(m_points_color_range["g_min"], m_points_color_range["g_max"]);
-
-        distr_b = std::uniform_real_distribution<double>(m_points_color_range["b_min"], m_points_color_range["b_max"]);
+        m_k_means = std::make_shared<K_Means>();
     }
 
     DBscan_Clustering::~DBscan_Clustering()
     {
+        printf("Destructor DBscan Clustering is called.\n");
+
+        std::cout << std::endl;
     }
 
     void DBscan_Clustering::executeDBscanClustering(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points, const double &t_min_points, const double &t_eps)
     {
-        pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
+        // fill in pcl cloud
+        pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
+        cloud->width = t_lidar_points->size();
+        cloud->height = 1;
+        cloud->points.resize(cloud->width * cloud->height);
 
-        m_k_means.pclPointCloudConverter(t_lidar_points, cloud);
+        for (size_t i{0}; i < cloud->points.size(); ++i)
+        {
+            cloud->points[i].x = t_lidar_points->at(i).at(0).at(0);
+            cloud->points[i].y = t_lidar_points->at(i).at(1).at(0);
+            cloud->points[i].z = t_lidar_points->at(i).at(2).at(0);
+        }
 
-        pcl::search::KdTree<pcl::PointXYZRGB>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZRGB>);
+        // create kd tree
+        pcl::search::KdTree<pcl::PointXYZ>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZ>);
         tree->setInputCloud(cloud);
 
+        // create vector of point indices
         std::vector<pcl::PointIndices> cluster_indices;
-        pcl::EuclideanClusterExtraction<pcl::PointXYZRGB> ec;
-        ec.setClusterTolerance(t_eps);
+
+        // create euclidean cluster extraction object
+        pcl::EuclideanClusterExtraction<pcl::PointXYZ> ec;
+        ec.setClusterTolerance(t_eps); // 2cm
         ec.setMinClusterSize(t_min_points);
-        ec.setMaxClusterSize(t_min_points * 10);
+        ec.setMaxClusterSize(25000);
         ec.setSearchMethod(tree);
         ec.setInputCloud(cloud);
         ec.extract(cluster_indices);
 
-        int j = 0;
+        // clusted pcl cloud
+        pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_clustered(new pcl::PointCloud<pcl::PointXYZRGB>);
 
-        pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster_main(new pcl::PointCloud<pcl::PointXYZRGB>);
-
+        int j{0};
         for (std::vector<pcl::PointIndices>::const_iterator it = cluster_indices.begin(); it != cluster_indices.end(); ++it)
         {
             pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_cluster(new pcl::PointCloud<pcl::PointXYZRGB>);
-
             for (std::vector<int>::const_iterator pit = it->indices.begin(); pit != it->indices.end(); ++pit)
-                cloud_cluster->points.push_back(cloud->points[*pit]); //*
-
+            {
+                pcl::PointXYZRGB point;
+                point.x = cloud->points[*pit].x;
+                point.y = cloud->points[*pit].y;
+                point.z = cloud->points[*pit].z;
+                point.r = int(m_k_means->distr_r(m_k_means->eng_r));
+                point.g = int(m_k_means->distr_g(m_k_means->eng_g));
+                point.b = int(m_k_means->distr_b(m_k_means->eng_b));
+                cloud_cluster->points.push_back(point);
+            }
             cloud_cluster->width = cloud_cluster->points.size();
             cloud_cluster->height = 1;
             cloud_cluster->is_dense = true;
 
-            std::cout << "PointCloud representing the Cluster: " << cloud_cluster->points.size() << " data points." << std::endl;
-
-            j++;
-
-            for (size_t i{0}; i < cloud_cluster->points.size(); ++i)
-            {
-                cloud_cluster->points[i].r = distr_r(eng_r);
-                cloud_cluster->points[i].g = distr_g(eng_g);
-                cloud_cluster->points[i].b = distr_b(eng_b);
-            }
-
-            if (cluster_indices.size() == 1)
-            {
-                cloud_cluster_main = cloud_cluster;
-            }
-            else
-            {
-                *cloud_cluster_main += *cloud_cluster;
-            }
+            *cloud_clustered += *cloud_cluster;
+            ++j;
         }
 
-        for (size_t i{0}; i < cloud_cluster_main->size(); ++i)
+        if (cloud_clustered->points.size() > 0)
         {
-            printf("x = %f, y = %f, z = %f \n", cloud_cluster_main->points[i].x, cloud_cluster_main->points[i].y, cloud_cluster_main->points[i].z);
-            printf("size of cloud_cluster_main = %d \n", cloud_cluster_main->size());
+            printf("Number of clusters is equal to %d", j);
         }
-        
+        else
+        {
+            printf("No clusters found in the point cloud data");
+            printf("Number of clusters is equal to %d", j);
+            printf("Change the parameters of DBscan clustering");
+        }
 
-        clusteredCloudVisualization(cloud_cluster_main);
+        // Print Clustered Groups Coordinates
+        for (size_t i{0}; i < cloud_clustered->points.size(); ++i)
+        {
+            std::cout << "x: " << cloud_clustered->points[i].x << " y: " << cloud_clustered->points[i].y << " z: " << cloud_clustered->points[i].z << std::endl;
+        }
+        std::cout << std::endl;
+
+        std::cout << "Number of points in clustered cloud: " << cloud_clustered->points.size() << std::endl;
+
+        clusteredCloudVisualization(cloud_clustered);
     }
     void DBscan_Clustering::clusteredCloudVisualization(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &t_cloud)
     {
+        std::cout << std::endl;
+        std::cout << std::endl;
+        std::cout << " Inorder to go back menu click on the viewer window and press '❌' " << std::endl;
 
         pcl::visualization::PCLVisualizer viewer("DBscan Clustered Cloud");
 
@@ -95,21 +105,12 @@ namespace Lidar_Simulation
 
         viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "cloud");
 
-        viewer.setBackgroundColor(0.0, 0.0, 0.0);
-
-        viewer.addCoordinateSystem(1, 0, 0, 0);
-
-        std::cout << std::endl;
-        std::cout << std::endl;
-        std::cout << " Inorder to go back menu click on the viewer window and press '❌' " << std::endl;
+        viewer.setBackgroundColor(0, 0, 0);
 
         while (!viewer.wasStopped())
         {
-            viewer.spinOnce(100);
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            viewer.spinOnce();
         }
-
-        m_flag = false;
 
         viewer.close();
     }

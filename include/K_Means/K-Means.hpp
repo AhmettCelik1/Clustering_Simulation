@@ -26,9 +26,9 @@
 #include <pcl/kdtree/kdtree_flann.h>
 #include <pcl/segmentation/extract_clusters.h>
 
-namespace Lidar_Simulation
+namespace Clustering_Simulation
 {
-    class K_Means
+    class K_Means 
     {
 
     public:
@@ -63,15 +63,7 @@ namespace Lidar_Simulation
         pcl::PointCloud<pcl::PointXYZRGB>::Ptr m_cloud_cluster;
 
         size_t m_cluster_number;
-
-        vtkRenderWindowInteractor *m_interactor;
-
-        std::thread m_cluster_thread;
-
-        std::thread m_raw_thread;
-
-        bool m_flag;
-
+        
         void kMeansClustering(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points, const size_t &t_cluster_number);
 
         void rawpointCloudVisualizationThread();
