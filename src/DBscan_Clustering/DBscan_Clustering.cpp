@@ -2,9 +2,13 @@
 
 namespace Clustering_Simulation
 {
-    DBscan_Clustering::DBscan_Clustering() : K_Means()
+    DBscan_Clustering::DBscan_Clustering() : K_Means(),
+                                             Clustering_Visualization(),
+                                             m_cloud_name{"DBscan_Clustering Cloud"}
     {
         m_k_means = std::make_shared<K_Means>();
+
+        m_clustering_visualization = std::make_shared<Clustering_Visualization>();
     }
 
     DBscan_Clustering::~DBscan_Clustering()
@@ -95,28 +99,7 @@ namespace Clustering_Simulation
 
         std::cout << "Number of points in clustered cloud: " << cloud_clustered->points.size() << std::endl;
 
-        clusteredCloudVisualization(cloud_clustered);
-    }
-    void DBscan_Clustering::clusteredCloudVisualization(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &t_cloud)
-    {
-        std::cout << std::endl;
-        std::cout << std::endl;
-        std::cout << " Inorder to go back menu click on the viewer window and press '❌' " << std::endl;
-
-        pcl::visualization::PCLVisualizer viewer("DBscan Clustered Cloud");
-
-        viewer.addPointCloud(t_cloud, "cloud");
-
-        viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "cloud");
-
-        viewer.setBackgroundColor(0, 0, 0);
-
-        while (!viewer.wasStopped())
-        {
-            viewer.spinOnce();
-        }
-
-        viewer.close();
+        m_clustering_visualization->clusteringVisualization(cloud_clustered, m_cloud_name);
     }
 
 } // namespace Lidar_Simulation

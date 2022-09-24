@@ -26,9 +26,11 @@
 #include <pcl/kdtree/kdtree_flann.h>
 #include <pcl/segmentation/extract_clusters.h>
 
+#include "../../include/Clustering_Visualization/Clustering_Visualization.hpp"
+
 namespace Clustering_Simulation
 {
-    class K_Means 
+    class K_Means : public Clustering_Visualization
     {
 
     public:
@@ -36,43 +38,16 @@ namespace Clustering_Simulation
 
         ~K_Means();
 
-        std::unordered_map<std::string, double> m_points_color_range;
-
-        std::uniform_real_distribution<double> distr_r;
-
-        std::uniform_real_distribution<double> distr_g;
-
-        std::uniform_real_distribution<double> distr_b;
-
-        std::random_device rd_r;
-
-        std::random_device rd_g;
-
-        std::random_device rd_b;
-
-        std::mt19937 eng_r;
-
-        std::mt19937 eng_g;
-
-        std::mt19937 eng_b;
-
         std::shared_ptr<std::vector<std::vector<std::vector<double>>>> m_lidar_points;
 
-        pcl::PointCloud<pcl::PointXYZRGB>::Ptr m_cloud;
-
-        pcl::PointCloud<pcl::PointXYZRGB>::Ptr m_cloud_cluster;
-
         size_t m_cluster_number;
-        
+
+        std::string m_kmeans_name;
+
+
+        std::shared_ptr<Clustering_Visualization> m_clustering_visualization;
+
         void kMeansClustering(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points, const size_t &t_cluster_number);
-
-        void rawpointCloudVisualizationThread();
-
-        void clusteredCloudVisualizationThread();
-
-        void callRawData(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points);
-
-        void pclPointCloudConverter(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points, pcl::PointCloud<pcl::PointXYZRGB>::Ptr &t_cloud);
     };
 } // Namespace  Lidar_Simulation
 

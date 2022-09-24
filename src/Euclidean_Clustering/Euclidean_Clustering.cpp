@@ -1,13 +1,10 @@
 #include "../../include/Euclidean_Clustering/Euclidean_Clustering.hpp"
 
-#include <pcl/segmentation/extract_clusters.h>
-
 namespace Clustering_Simulation
 {
-    Euclidean_Clustering::Euclidean_Clustering() : K_Means()
+    Euclidean_Clustering::Euclidean_Clustering() : Clustering_Visualization(),
+                                                   m_cloud_name{"Euclidean_Clustering Cloud"}
     {
-
-        m_k_means = std::make_shared<K_Means>();
     }
 
     Euclidean_Clustering::~Euclidean_Clustering()
@@ -20,7 +17,12 @@ namespace Clustering_Simulation
     {
         pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
 
-        m_k_means->pclPointCloudConverter(t_lidar_points, cloud);
+        this->vectorToPclPointCloudConverter(t_lidar_points, cloud);
+
+        for (auto point : *cloud)
+        {
+            std::cout << "x: " << point.x << " y: " << point.y << " z: " << point.z << " r: " << point.r << " g: " << point.g << " b: " << point.b << std::endl;
+        }
 
         pcl::search::KdTree<pcl::PointXYZRGB>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZRGB>);
         tree->setInputCloud(cloud);
@@ -50,7 +52,7 @@ namespace Clustering_Simulation
         if (cluster_indices.size() > 0)
         {
             printf("Number of clusters is equal to %d \n", cluster_indices.size());
-            viewerClusterCloud(cloud);
+            this->clusteringVisualization(cloud, m_cloud_name);
         }
         else
         {
@@ -59,28 +61,4 @@ namespace Clustering_Simulation
         }
     }
 
-    void Euclidean_Clustering::viewerClusterCloud(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &t_cloud)
-    {
-
-        pcl::visualization::PCLVisualizer viewer("Euclidean_Clustering Point Cloud");
-
-        viewer.addPointCloud(t_cloud, "cloud");
-
-        viewer.setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "cloud");
-
-        viewer.setBackgroundColor(0.0, 0.0, 0.0);
-
-        viewer.addCoordinateSystem(1, 0, 0, 0);
-        std::cout << std::endl;
-        std::cout << std::endl;
-        std::cout << " Inorder to go back menu click on the viewer window and press '❌' " << std::endl;
-
-        while (!viewer.wasStopped())
-        {
-            viewer.spinOnce(100);
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        }
-
-        viewer.close();
-    }
 }

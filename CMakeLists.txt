@@ -146,6 +146,41 @@ target_link_libraries(dbscan_clustering_core
 
 
 
+
+## Declare a cpp library
+add_library(clustering_visualization_core
+        src/Clustering_Visualization/Clustering_Visualization.cpp
+        )
+
+include_directories(
+        include
+        ${OpenCV_INCLUDE_DIRS}
+        ${PCL_INCLUDE_DIRS}
+        ${Boost_INCLUDE_DIRS}
+        )
+
+link_directories(${PCL_LIBRARY_DIRS})
+
+add_definitions(${PCL_DEFINITIONS})
+
+target_compile_features(clustering_visualization_core INTERFACE cxx_std_11)
+
+## Add dependencies to exported targets, like ROS msgs or srvs
+add_dependencies(clustering_visualization_core
+        ${OpenCV_LIBS}
+        )
+
+## Specify libraries to link executable targets against
+target_link_libraries(clustering_visualization_core
+        ${OpenCV_LIBS}
+        ${PCL_LIBRARIES}
+        ${CMAKE_THREAD_LIBS_INIT}
+        
+)
+
+
+
+
 ## Declare cpp executables
 add_executable(main
         src/main.cpp
@@ -155,6 +190,7 @@ add_executable(main
         src/K_Means/K_Means.cpp
         src/Euclidean_Clustering/Euclidean_Clustering.cpp
         src/DBscan_Clustering/DBscan_Clustering.cpp
+        src/Clustering_Visualization/Clustering_Visualization.cpp
         )
 
 target_compile_features(main INTERFACE cxx_std_11)

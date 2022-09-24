@@ -9,6 +9,5 @@ int main()
 
     lidar_activation = std::make_shared<Clustering_Simulation::Clustering_Activation>(t_size);
 
-    lidar_activation;
     return 0;
 }

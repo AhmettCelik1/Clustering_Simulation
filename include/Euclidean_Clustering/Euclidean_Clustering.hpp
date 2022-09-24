@@ -29,11 +29,11 @@
 #include <pcl/segmentation/extract_clusters.h>
 
 #include "../../include/K_Means/K-Means.hpp"
+#include "../../include/Clustering_Visualization/Clustering_Visualization.hpp"
 
 namespace Clustering_Simulation
 {
-    class Euclidean_Clustering : protected K_Means
-
+    class Euclidean_Clustering : public Clustering_Visualization
     {
 
     public:
@@ -41,11 +41,13 @@ namespace Clustering_Simulation
 
         ~Euclidean_Clustering();
 
+        std::string m_cloud_name;
+
         std::shared_ptr<K_Means> m_k_means;
 
-        void executeEcludianClustering(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points, const double t_tolarance);
+        std::shared_ptr<Clustering_Visualization> m_clustering_visualization;
 
-        void viewerClusterCloud(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &t_cloud);
+        void executeEcludianClustering(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points, const double t_tolarance);
     };
 }
 

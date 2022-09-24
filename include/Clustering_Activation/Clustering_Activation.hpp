@@ -16,17 +16,19 @@
 #include "../../include/K_Means/K-Means.hpp"
 #include "../../include/Euclidean_Clustering/Euclidean_Clustering.hpp"
 #include "../../include/DBscan_Clustering/DBscan_Clustering.hpp"
+#include "../../include/Clustering_Visualization/Clustering_Visualization.hpp"
 
 #define __APP_NAME__ "Clustering_Activation"
 
 namespace Clustering_Simulation
 {
 
-    class Clustering_Activation final : protected Lidar_Utils, // prevent Lidar_Activation class be derived from implemented final keyword
-                                        protected Lidar_Tool_Option,
-                                        protected K_Means,
-                                        protected Euclidean_Clustering,
-                                        protected DBscan_Clustering
+    class Clustering_Activation final : public Lidar_Utils, // prevent Lidar_Activation class be derived from implemented final keyword
+                                        public Lidar_Tool_Option,
+                                        public K_Means,
+                                        public Euclidean_Clustering,
+                                        public DBscan_Clustering,
+                                        public Clustering_Visualization
     {
         friend std::ostream &operator<<(std::ostream &os, const Clustering_Activation &lidar_activation);
 
@@ -49,11 +51,13 @@ namespace Clustering_Simulation
 
         std::shared_ptr<Lidar_Tool_Option> m_lidar_tool_option;
 
-        std::shared_ptr<K_Means> m_k_means;
+        K_Means m_k_means;
 
         std::shared_ptr<Euclidean_Clustering> m_euclidean_clustering;
 
         std::shared_ptr<DBscan_Clustering> m_dbscan_clustering;
+
+        std::shared_ptr<Clustering_Visualization> m_clustering_visualization;
 
         size_t m_cluster_number;
 
@@ -63,7 +67,7 @@ namespace Clustering_Simulation
 
         double m_tolerance;
 
-        std::thread m_thread_menu;
+        std::string m_raw_cloud_name;
 
         /*!
          * CounterObjects.

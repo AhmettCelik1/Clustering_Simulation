@@ -13,7 +13,8 @@ namespace Clustering_Simulation
           Euclidean_Clustering(),
           DBscan_Clustering(),
           m_size{t_size},
-          m_lidar_points_3d{nullptr}
+          m_lidar_points_3d{nullptr},
+          m_raw_cloud_name{"Raw Cloud"}
 
     {
 
@@ -26,11 +27,11 @@ namespace Clustering_Simulation
 
         m_lidar_tool_option = std::make_shared<Lidar_Tool_Option>();
 
-        m_k_means = std::make_shared<K_Means>();
-
         m_euclidean_clustering = std::make_shared<Euclidean_Clustering>();
 
         m_dbscan_clustering = std::make_shared<DBscan_Clustering>();
+
+        m_clustering_visualization = std::make_shared<Clustering_Visualization>();
 
         std::cout << "Enter the size of the lidar points: ";
         std::cin >> m_size;
@@ -43,9 +44,9 @@ namespace Clustering_Simulation
 
         displayActiveObjects();
 
-        m_thread_menu = std::thread(&Clustering_Activation::showMenu, this);
+        std::thread t1(&Clustering_Activation::showMenu, this);
 
-        m_thread_menu.join();
+        t1.join();
     }
 
     Clustering_Activation::~Clustering_Activation()
@@ -118,7 +119,8 @@ namespace Clustering_Simulation
             else if (m_options == 3)
             {
                 printf("The Raw Data Is Visulized Below\n");
-                m_k_means->callRawData(m_lidar_points_3d);
+
+                m_clustering_visualization->callRawPointsVisualization(m_lidar_points_3d);
             }
 
             else if (m_options == 4)
@@ -126,7 +128,7 @@ namespace Clustering_Simulation
 
                 std::cout << "Enter the number of clusters: ";
                 std::cin >> m_cluster_number;
-                m_k_means->kMeansClustering(m_lidar_points_3d, m_cluster_number);
+                m_k_means.kMeansClustering(m_lidar_points_3d, m_cluster_number);
 
                 std::cout << std::endl;
             }
@@ -170,8 +172,6 @@ namespace Clustering_Simulation
                 std::cout << std::endl;
             }
         } while (m_options != 8);
-
-        m_thread_menu.detach();
     }
 
 }

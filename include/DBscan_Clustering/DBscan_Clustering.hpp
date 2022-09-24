@@ -29,6 +29,7 @@
 #include <pcl/segmentation/extract_clusters.h>
 
 #include "../../include/K_Means/K-Means.hpp"
+#include "../../include/Clustering_Visualization/Clustering_Visualization.hpp"
 
 #define UNCLASSIFIED -1
 #define CORE_POINT 1
@@ -39,19 +40,21 @@
 
 namespace Clustering_Simulation
 {
-    class DBscan_Clustering : protected K_Means
-
+    class DBscan_Clustering : public K_Means,
+                              public Clustering_Visualization
     {
     public:
         DBscan_Clustering();
 
         ~DBscan_Clustering();
 
+        std::string m_cloud_name;
+
         std::shared_ptr<K_Means> m_k_means;
 
-        void executeDBscanClustering(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points, const double &t_min_points, const double &t_eps);
+        std::shared_ptr<Clustering_Visualization> m_clustering_visualization;
 
-        void clusteredCloudVisualization(pcl::PointCloud<pcl::PointXYZRGB>::Ptr &t_cloud);
+        void executeDBscanClustering(const std::shared_ptr<std::vector<std::vector<std::vector<double>>>> &t_lidar_points, const double &t_min_points, const double &t_eps);
     };
 } // namespace Lidar_Simulation
 
