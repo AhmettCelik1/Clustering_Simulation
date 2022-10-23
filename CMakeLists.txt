@@ -17,7 +17,10 @@ find_package(OpenCV REQUIRED)
 find_package(Threads REQUIRED)
 find_package(PCL 1.2 REQUIRED)
 
+
+find_package(Boost REQUIRED COMPONENTS timer thread serialization chrono)
 ## Declare a cpp library
+
 add_library(utils_core
         src/Lidar_Utils/Lidar_Utils.cpp
         )
